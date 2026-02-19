@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E2E Test Agents — Technical Documentation</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple: #31135D;
+  --purple-mid: #6D31C2;
+  --purple-light: #8C68EE;
+  --purple-bg: #F7F2FA;
+  --ink: #1a1a1a;
+  --ink-soft: #374151;
+  --ink-muted: #6b7280;
+  --ink-ghost: #9ca3af;
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --border: #e5e7eb;
+  --green: #059669;
+  --green-bg: #ecfdf5;
+  --amber: #d97706;
+  --amber-bg: #fffbeb;
+  --red: #dc2626;
+  --red-bg: #fef2f2;
+  --blue: #2563eb;
+  --blue-bg: #eff6ff;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page { max-width: 860px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple-mid) 100%);
+  padding: 64px 24px 56px;
+  text-align: center;
+  color: white;
+  margin-bottom: 48px;
+}
+.hero__label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  opacity: 0.7;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+.hero p {
+  font-size: 1.1rem;
+  font-weight: 300;
+  opacity: 0.85;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+.hero__date {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  opacity: 0.5;
+  margin-top: 24px;
+}
+
+/* Snapshot bar */
+.snapshot {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 48px;
+}
+.snapshot__item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+.snapshot__value {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1.75rem;
+  color: var(--purple-mid);
+}
+.snapshot__label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+/* Section */
+.section { margin-bottom: 56px; }
+.section__number {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--purple-light);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.section h2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--purple);
+  margin-bottom: 8px;
+}
+.section__subtitle {
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+  margin-bottom: 24px;
+}
+.section p, .section li {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  line-height: 1.75;
+}
+.section ul, .section ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+.section li { margin-bottom: 8px; }
+
+/* Proposal cards */
+.proposal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 20px;
+  transition: box-shadow 0.15s ease;
+}
+.proposal:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.proposal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.proposal h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  flex: 1;
+}
+.proposal__impact {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.impact--high { background: var(--green-bg); color: var(--green); }
+.impact--medium { background: var(--amber-bg); color: var(--amber); }
+.impact--low { background: var(--blue-bg); color: var(--blue); }
+.impact--agent1 { background: var(--purple-bg); color: var(--purple-mid); }
+.impact--agent2 { background: var(--blue-bg); color: var(--blue); }
+.impact--shared { background: var(--green-bg); color: var(--green); }
+.proposal__effort {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--purple-bg);
+  color: var(--purple-mid);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.proposal p {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.proposal__why {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  padding: 12px 16px;
+  background: var(--bg);
+  border-radius: 8px;
+  border-left: 3px solid var(--purple-light);
+  line-height: 1.6;
+}
+.proposal__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #f3f4f6;
+  color: var(--ink-muted);
+}
+
+/* Divider */
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 48px 0;
+}
+
+/* Code blocks */
+code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85em;
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--purple-mid);
+}
+pre {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  padding: 20px;
+  border-radius: 10px;
+  overflow-x: auto;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 16px 0;
+}
+
+/* Diagram */
+.diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  margin: 24px 0;
+  text-align: center;
+}
+.diagram pre {
+  background: transparent;
+  color: var(--ink-soft);
+  text-align: left;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Callout */
+.callout {
+  padding: 20px 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+.callout--insight { background: var(--purple-bg); border-left: 4px solid var(--purple-mid); }
+.callout--warning { background: var(--amber-bg); border-left: 4px solid var(--amber); }
+.callout--success { background: var(--green-bg); border-left: 4px solid var(--green); }
+.callout__title {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+.callout--insight .callout__title { color: var(--purple-mid); }
+.callout--warning .callout__title { color: var(--amber); }
+.callout--success .callout__title { color: var(--green); }
+.callout p { font-size: 0.88rem; }
+
+/* Priority matrix */
+.matrix {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+.matrix__quadrant {
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.matrix__quadrant h4 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+}
+.matrix__quadrant ul { padding-left: 16px; }
+.matrix__quadrant li { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 4px; }
+.q-now { background: var(--green-bg); }
+.q-now h4 { color: var(--green); }
+.q-next { background: var(--blue-bg); }
+.q-next h4 { color: var(--blue); }
+.q-later { background: var(--amber-bg); }
+.q-later h4 { color: var(--amber); }
+.q-maybe { background: #f3f4f6; }
+.q-maybe h4 { color: var(--ink-muted); }
+
+/* Flow step */
+.flow-step {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: flex-start;
+}
+.flow-step__number {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  background: var(--purple-mid);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.flow-step__content {
+  flex: 1;
+}
+.flow-step__title {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.flow-step__desc {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+
+/* Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.85rem;
+}
+.data-table th {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ink-muted);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink-soft);
+}
+.data-table tr:hover td {
+  background: var(--purple-bg);
+}
+
+@media (max-width: 600px) {
+  .hero h1 { font-size: 1.75rem; }
+  .snapshot { grid-template-columns: repeat(2, 1fr); }
+  .matrix { grid-template-columns: 1fr; }
+  .proposal__header { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero__label">Split Lease &middot; E2E Test Suite</div>
+  <h1>Dual-Agent Proposal Journey</h1>
+  <p>Technical documentation for the two-agent Playwright + Bubble API test system that automates and verifies the full listing&ndash;proposal&ndash;counter&ndash;acceptance lifecycle on app.split.lease.</p>
+  <div class="hero__date">February 19, 2026</div>
+</div>
+
+<div class="page">
+
+<!-- SNAPSHOT -->
+<div class="snapshot">
+  <div class="snapshot__item">
+    <div class="snapshot__value">2</div>
+    <div class="snapshot__label">Parallel Agents</div>
+  </div>
+  <div class="snapshot__item">
+    <div class="snapshot__value">4</div>
+    <div class="snapshot__label">Lifecycle Phases</div>
+  </div>
+  <div class="snapshot__item">
+    <div class="snapshot__value">23</div>
+    <div class="snapshot__label">Automated Steps</div>
+  </div>
+  <div class="snapshot__item">
+    <div class="snapshot__value">2</div>
+    <div class="snapshot__label">Site Profiles</div>
+  </div>
+  <div class="snapshot__item">
+    <div class="snapshot__value">3</div>
+    <div class="snapshot__label">Verification Layers</div>
+  </div>
+</div>
+
+<!-- ARCHITECTURE OVERVIEW -->
+<div class="section">
+  <div class="section__number">Overview</div>
+  <h2>Two Agents, One Journey, Three Layers of Truth</h2>
+  <p class="section__subtitle">A parallel test architecture that validates the proposal lifecycle from UI, backend API, and database.</p>
+
+  <p>The test suite consists of two scripts that run concurrently. <strong>Agent 1</strong> (<code>proposal-journey-bubble.cjs</code>) drives a real browser through the complete host&ndash;guest proposal flow&mdash;creating listings, submitting proposals, countering terms, and accepting. <strong>Agent 2</strong> (<code>bubble-price-tracker.cjs</code>) runs headlessly alongside, polling the Bubble Data API to capture every backend price and status change as it happens.</p>
+
+  <p>Together they produce three independent views of the same transaction: what the <em>user saw</em> (screenshots + scraped prices), what the <em>API reported</em> (Bubble Data API snapshots), and what the <em>database stored</em> (Supabase verification). Discrepancies between these layers surface pricing bugs that neither a pure UI test nor a pure API test would catch alone.</p>
+
+  <div class="diagram">
+    <pre>
+  Agent 1 (Playwright Browser)              Agent 2 (Bubble Data API)
+  ───────────────────────────               ─────────────────────────
+  Phase 1: Host creates listing
+       │
+       ├── writes listing-signal.json ───▶  Detects signal, fetches listing
+       │                                         │
+  Phase 2: Guest creates proposal          Polls for new Proposal object
+       │                                         │
+  Phase 3: Host counters                   Detects price/status diff
+       │                                         │
+  Phase 4: Guest accepts                   Detects acceptance, final snapshot
+       │                                         │
+  Backend Observer (Supabase) ◀─── both write to same run directory ───▶
+       │
+  ┌────▼─────────────────────────────────────────────────────────┐
+  │  recordings/{site}/{timestamp}/                              │
+  │    ├── screenshots/           (23 PNGs)                      │
+  │    ├── test-images/           (generated upload images)      │
+  │    ├── price-log.json         (Agent 1 UI-scraped prices)    │
+  │    ├── backend-price-tracker-log.json  (Agent 2 API prices)  │
+  │    ├── backend-price-summary.txt       (cross-phase table)   │
+  │    ├── verification-report.json        (Supabase check)      │
+  │    ├── listing-signal.json    (Agent 1 → Agent 2 handoff)    │
+  │    ├── listing-raw-fields.json                               │
+  │    ├── proposal-raw-fields.json                              │
+  │    └── *.webm                 (video recording)              │
+  └──────────────────────────────────────────────────────────────┘
+    </pre>
+  </div>
+
+  <div class="callout callout--insight">
+    <div class="callout__title">Why two agents?</div>
+    <p>Bubble.io renders prices client-side through workflows that may compute differently than the Data API returns. Agent 1 captures what users see; Agent 2 captures what the backend believes. If these diverge&mdash;a nightly rate shows $50 in the UI but $45 in the API&mdash;there's a pricing workflow bug. A single-agent approach can only test one of these surfaces at a time.</p>
+  </div>
+</div>
+
+<hr>
+
+<!-- AGENT 1 -->
+<div class="section">
+  <div class="section__number">Agent 1</div>
+  <h2>proposal-journey-bubble.cjs</h2>
+  <p class="section__subtitle">Playwright browser automation &mdash; 1,180 lines &mdash; drives the full host/guest flow end-to-end.</p>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Purpose &amp; Responsibilities</h3>
+      <span class="proposal__impact impact--agent1">Agent 1</span>
+      <span class="proposal__effort">Playwright</span>
+    </div>
+    <p>This script launches a headed Chromium browser (with video recording) and walks through the entire Split Lease proposal lifecycle as both a host and a guest user. It logs in, fills forms, clicks buttons, scrapes visible prices, takes screenshots at every milestone, and verifies the resulting listing against Supabase.</p>
+    <p>It also coordinates with Agent 2 by writing a <code>listing-signal.json</code> file after listing creation and a <code>price-log.json</code> file that Agent 2 monitors for early termination.</p>
+    <div class="proposal__tags">
+      <span class="tag">playwright</span>
+      <span class="tag">chromium</span>
+      <span class="tag">supabase</span>
+      <span class="tag">video recording</span>
+      <span class="tag">screenshots</span>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>CLI Interface</h3>
+      <span class="proposal__impact impact--agent1">Agent 1</span>
+      <span class="proposal__effort">Configuration</span>
+    </div>
+<pre>node proposal-journey-bubble.cjs [options]
+
+Options:
+  --site=app.split.lease    Target site profile (default: app.split.lease)
+  --site=split.lease        Use the production site profile instead
+
+  --skip-to=phase2          Skip listing creation, start at guest proposal
+  --skip-to=phase3          Skip to host counter-offer
+  --skip-to=phase4          Skip to guest acceptance
+
+  --listing-url=&lt;url&gt;       Required when using --skip-to (which listing to target)</pre>
+    <div class="proposal__why">
+      <strong>Skip-to mode:</strong> When iterating on later phases (e.g. debugging the counter-offer flow), you can skip listing creation entirely by providing an existing listing URL. The script navigates to the homepage, logs in the appropriate user, and picks up mid-flow.
+    </div>
+    <div class="proposal__tags">
+      <span class="tag">--site</span>
+      <span class="tag">--skip-to</span>
+      <span class="tag">--listing-url</span>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- PHASE BREAKDOWN -->
+<div class="section">
+  <div class="section__number">Phases</div>
+  <h2>The Four-Phase Lifecycle</h2>
+  <p class="section__subtitle">Agent 1 drives these phases sequentially in a single browser session, switching users between phases.</p>
+
+  <!-- PHASE 1 -->
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Phase 1 &mdash; Host Creates Listing</h3>
+      <span class="proposal__impact impact--high">Steps 1&ndash;13</span>
+      <span class="proposal__effort">~5 min</span>
+    </div>
+    <p>The host logs in, navigates to the dashboard, and walks through the 6-section listing wizard: Address (space type, bedrooms, kitchen, parking, bathrooms, autocomplete address), Features (load common + template), Lease Style (Nights-of-the-week), Pricing (defaults), Rules (cancellation, guests, storage), and Photos (3 programmatically-generated PNG test images).</p>
+
+    <div class="flow-step">
+      <div class="flow-step__number">1</div>
+      <div class="flow-step__content">
+        <div class="flow-step__title">Navigate &amp; Login</div>
+        <div class="flow-step__desc">Go to homepage, open auth modal, fill host credentials, wait 15s for Bubble auth to complete.</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step__number">2</div>
+      <div class="flow-step__content">
+        <div class="flow-step__title">Open Dashboard</div>
+        <div class="flow-step__desc">Click avatar dropdown &rarr; "Listings &amp; Proposals". Dismiss any greyout overlays.</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step__number">3</div>
+      <div class="flow-step__content">
+        <div class="flow-step__title">Create Listing Wizard (6 sections)</div>
+        <div class="flow-step__desc">Fill title, select Bubble internal option values for space type / bedrooms / kitchen / parking / bathrooms, type address with Google autocomplete, load common features + template, select "Nights-of-the-week", use default pricing, set cancellation policy / guests / storage, upload 3 generated test PNGs.</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step__number">4</div>
+      <div class="flow-step__content">
+        <div class="flow-step__title">Submit &amp; Extract URL</div>
+        <div class="flow-step__desc">Click "Submit Listing", then "Manage listing". Extract the listing view URL via clipboard interception (intercepts <code>navigator.clipboard.writeText</code>), falling back to page link scanning or URL ID extraction.</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step__number">5</div>
+      <div class="flow-step__content">
+        <div class="flow-step__title">Signal Agent 2 &amp; Sign Out</div>
+        <div class="flow-step__desc">Write <code>listing-signal.json</code> with listing ID, URL, title, and run directory. Then sign out the host via avatar dropdown.</div>
+      </div>
+    </div>
+
+    <div class="proposal__tags">
+      <span class="tag">loginAs()</span>
+      <span class="tag">extractListingURL()</span>
+      <span class="tag">generateTestImages()</span>
+      <span class="tag">listing-signal.json</span>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Phase 2 &mdash; Guest Creates Proposal</h3>
+      <span class="proposal__impact impact--high">Steps 14&ndash;16</span>
+      <span class="proposal__effort">~3 min</span>
+    </div>
+    <p>The guest logs in, navigates directly to the listing page (with days and duration pre-selected via URL query params), changes duration to 16 weeks, clicks "Create Proposal", scrapes the proposal modal prices (price per night, total reservation, first 4 weeks), submits the proposal, and signs out.</p>
+
+    <div class="proposal__why">
+      <strong>URL params trick:</strong> Instead of manually selecting days and duration through Bubble's UI, the script navigates to <code>/view-split-lease/{id}?days-selected=1,2,3,4,5,6,7&amp;duration=6%20weeks</code>. Bubble reads these params and pre-populates the proposal form. The script then changes duration to 16 weeks via the combobox.
+    </div>
+
+    <div class="proposal__tags">
+      <span class="tag">scrapePrices()</span>
+      <span class="tag">logPrice()</span>
+      <span class="tag">force: true click</span>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Phase 3 &mdash; Host Counters Proposal</h3>
+      <span class="proposal__impact impact--high">Steps 17&ndash;20</span>
+      <span class="proposal__effort">~3 min</span>
+    </div>
+    <p>The host logs back in, navigates to the dashboard, opens the notification bell, finds the notification matching the listing title (via regex), clicks "View this proposal", then "Review / Modify" &rarr; "Edit Proposal Terms" &rarr; changes duration from 16 weeks to 10 weeks &rarr; "Update Proposal" &rarr; "Yes, Proceed". Scrapes counter-offer prices (compensation per night, duration, total). Signs out.</p>
+
+    <div class="proposal__why">
+      <strong>Notification matching:</strong> The script builds a regex from the listing title to find the correct notification: <code>Related to: PW Test 02-19 14:30:00</code>. This avoids hardcoding notification IDs and works across runs.
+    </div>
+
+    <div class="proposal__tags">
+      <span class="tag">notification flow</span>
+      <span class="tag">regex matching</span>
+      <span class="tag">counter-offer</span>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Phase 4 &mdash; Guest Accepts Host Terms</h3>
+      <span class="proposal__impact impact--high">Steps 21&ndash;23</span>
+      <span class="proposal__effort">~2 min</span>
+    </div>
+    <p>The guest logs back in, navigates via "My Proposals", scrapes the acceptance-view prices (nightly rate, duration, total), clicks "Accept Host Terms" &rarr; "Yes, Proceed". The proposal is now finalized.</p>
+
+    <div class="proposal__tags">
+      <span class="tag">acceptance flow</span>
+      <span class="tag">final price capture</span>
+    </div>
+  </div>
+
+  <!-- BACKEND OBSERVER -->
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Final &mdash; Backend Observer (Supabase)</h3>
+      <span class="proposal__impact impact--medium">Verification</span>
+      <span class="proposal__effort">~5 sec</span>
+    </div>
+    <p>After all four phases complete, Agent 1 queries Supabase directly (REST API with anon key) to verify the listing exists and its fields match what was submitted. Compares 8 fields: listing name, space type, bedrooms, kitchen, parking, bathrooms, rental type, and active status. Generates a field-by-field <code>verification-report.json</code> with MATCH/MISMATCH results.</p>
+    <div class="proposal__why">
+      <strong>Foreign key handling:</strong> Some fields (type of space, parking) are stored as Bubble foreign key references. The verifier checks these are non-null rather than comparing exact values, since the FK format differs between Bubble and Supabase.
+    </div>
+    <div class="proposal__tags">
+      <span class="tag">Supabase REST</span>
+      <span class="tag">verification-report.json</span>
+      <span class="tag">compareValues()</span>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- AGENT 2 -->
+<div class="section">
+  <div class="section__number">Agent 2</div>
+  <h2>bubble-price-tracker.cjs</h2>
+  <p class="section__subtitle">Headless Bubble Data API poller &mdash; 580 lines &mdash; captures backend prices across the proposal lifecycle.</p>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Purpose &amp; Responsibilities</h3>
+      <span class="proposal__impact impact--agent2">Agent 2</span>
+      <span class="proposal__effort">Bubble API</span>
+    </div>
+    <p>This script runs in parallel with Agent 1 (no browser). It watches for the <code>listing-signal.json</code> file that Agent 1 writes after creating a listing, then polls the Bubble Data API every 10 seconds to capture backend price data at each lifecycle stage. It detects proposal creation, counter-offers, and acceptance by diffing snapshots. All events are written to a structured log with a final cross-phase comparison table.</p>
+    <div class="proposal__tags">
+      <span class="tag">Bubble Data API</span>
+      <span class="tag">polling</span>
+      <span class="tag">diff detection</span>
+      <span class="tag">no browser</span>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>CLI Interface</h3>
+      <span class="proposal__impact impact--agent2">Agent 2</span>
+      <span class="proposal__effort">Configuration</span>
+    </div>
+<pre>node bubble-price-tracker.cjs [options]
+
+Options:
+  --site=app.split.lease    Target site (default: app.split.lease)
+  --api-key=&lt;key&gt;           Bubble Data API key
+                            Falls back to: BUBBLE_API_KEY env
+                                           VITE_BUBBLE_API_KEY env
+                                           hardcoded default key</pre>
+    <div class="proposal__tags">
+      <span class="tag">--site</span>
+      <span class="tag">--api-key</span>
+      <span class="tag">env vars</span>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Signal File Handoff</h3>
+      <span class="proposal__impact impact--shared">Coordination</span>
+      <span class="proposal__effort">File-based IPC</span>
+    </div>
+    <p>Agent 2 polls the filesystem for <code>recordings/{site}/latest.txt</code> every 3 seconds (up to 10 minutes). When found, it reads the run timestamp pointer, then checks for <code>{timestamp}/listing-signal.json</code>. The signal contains the listing ID, URL, title, and run directory&mdash;everything Agent 2 needs to start tracking.</p>
+<pre>{
+  "listingId": "1738295847261x293847562938475",
+  "listingURL": "https://app.split.lease/view-split-lease/1738...",
+  "listingTitle": "PW Test 02-19 14:30:00",
+  "runDir": "recordings/app-split-lease/2026-02-19_14-30-00",
+  "timestamp": "2026-02-19T14:30:05.123Z"
+}</pre>
+    <div class="proposal__why">
+      <strong>Why file-based IPC?</strong> Both agents are independent Node.js processes. File-based signaling is dead simple, requires no shared-memory or socket coordination, and the signal file doubles as a debugging artifact. Agent 2 can also be started before Agent 1&mdash;it just waits.
+    </div>
+    <div class="proposal__tags">
+      <span class="tag">listing-signal.json</span>
+      <span class="tag">latest.txt</span>
+      <span class="tag">filesystem polling</span>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- BUBBLE API DETAILS -->
+<div class="section">
+  <div class="section__number">API Layer</div>
+  <h2>Bubble Data API Integration</h2>
+  <p class="section__subtitle">How Agent 2 fetches and diffs backend data without touching a browser.</p>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>API Client</h3>
+      <span class="proposal__impact impact--agent2">Agent 2</span>
+      <span class="proposal__effort">REST Client</span>
+    </div>
+    <p>Two core functions power all API access:</p>
+    <ul>
+      <li><code>bubbleGet(objectType, constraints, sortField, descending, limit)</code> &mdash; search objects with Bubble constraint syntax</li>
+      <li><code>bubbleGetById(objectType, uniqueId)</code> &mdash; direct lookup by Bubble <code>_id</code></li>
+    </ul>
+    <p>Both hit <code>https://app.split.lease/api/1.1/obj/{type}</code> with Bearer token auth. Constraints use Bubble's native format: <code>[{ key, constraint_type, value }]</code>.</p>
+    <div class="proposal__tags">
+      <span class="tag">bubbleGet()</span>
+      <span class="tag">bubbleGetById()</span>
+      <span class="tag">Bearer auth</span>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Tracked Listing Fields</h3>
+      <span class="proposal__impact impact--agent2">Agent 2</span>
+      <span class="proposal__effort">17 Fields</span>
+    </div>
+    <p>The <code>extractListingPriceFields()</code> function pulls these pricing and schedule fields from each listing snapshot:</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>Category</th><th>Fields</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Nightly Rates</td><td>Host rates for 2, 3, 4, 5, and 7 nights</td></tr>
+        <tr><td>Fees</td><td>Cleaning/Maintenance, Damage Deposit, Unit Markup</td></tr>
+        <tr><td>Computed Prices</td><td>Standardized Min Nightly Price, Price for map, Pricing list</td></tr>
+        <tr><td>Schedule</td><td>Min/Max Nights, Min/Max Weeks, Weeks offered, Nights available</td></tr>
+        <tr><td>Status</td><td>Active, Complete, Modified Date</td></tr>
+      </tbody>
+    </table>
+    <div class="proposal__tags">
+      <span class="tag">extractListingPriceFields()</span>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Tracked Proposal Fields</h3>
+      <span class="proposal__impact impact--agent2">Agent 2</span>
+      <span class="proposal__effort">22 Fields</span>
+    </div>
+    <p>The <code>extractProposalPriceFields()</code> function pulls these fields from each proposal snapshot:</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>Category</th><th>Fields</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Pricing</td><td>Nightly price, Host compensation, 4-week rent, Total compensation (host), Total reservation price (guest), Cleaning fee, Damage deposit</td></tr>
+        <tr><td>Duration</td><td>Reservation Span, Span in Weeks, Actual weeks, Nights per week, Days selected, Nights list, Check-in/out day, Week selection</td></tr>
+        <tr><td>Dates</td><td>Move-in range start, Move-out</td></tr>
+        <tr><td>Status</td><td>Status, Is Finalized, Rental type, History, Created/Modified Date</td></tr>
+      </tbody>
+    </table>
+    <div class="proposal__tags">
+      <span class="tag">extractProposalPriceFields()</span>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Snapshot Diffing</h3>
+      <span class="proposal__impact impact--agent2">Agent 2</span>
+      <span class="proposal__effort">Change Detection</span>
+    </div>
+    <p>Every 10 seconds, Agent 2 re-fetches the proposal and listing, extracts fields, and runs <code>diffSnapshots(prev, curr)</code>. This compares all fields (except timestamps) via JSON serialization and produces a change object: <code>{ field: { from: old, to: new } }</code>. The diff classifies changes into four categories:</p>
+    <ul>
+      <li><strong>PROPOSAL_CREATED</strong> &mdash; first time a Proposal object appears linked to the listing</li>
+      <li><strong>COUNTER_OFFER</strong> &mdash; price or duration fields changed, or status contains "counter"</li>
+      <li><strong>ACCEPTED</strong> &mdash; <code>Is Finalized</code> changed, or status contains "accept"</li>
+      <li><strong>LISTING_UPDATED</strong> &mdash; any listing field changed (pricing recalculation, activation, etc.)</li>
+    </ul>
+    <div class="proposal__tags">
+      <span class="tag">diffSnapshots()</span>
+      <span class="tag">10s polling</span>
+      <span class="tag">60 max polls</span>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- COORDINATION -->
+<div class="section">
+  <div class="section__number">Coordination</div>
+  <h2>How the Agents Communicate</h2>
+  <p class="section__subtitle">File-based signaling, shared output directories, and graceful termination.</p>
+
+  <div class="diagram">
+    <pre>
+  Time ──────────────────────────────────────────────────────────▶
+
+  Agent 1 (Browser)
+  ├─ launches browser
+  ├─ host login
+  ├─ listing wizard (steps 4-12)
+  ├─ writes latest.txt ─────────────────────┐
+  ├─ writes listing-signal.json ────────────┤
+  ├─ host sign-out                          │
+  ├─ guest login                            │
+  ├─ create proposal ──────── UI prices     │
+  ├─ submit proposal                        │
+  ├─ writes price-log.json ─────────────┐   │
+  ├─ guest sign-out                     │   │
+  ├─ host login                         │   │
+  ├─ host counters ──────── UI prices   │   │
+  ├─ updates price-log.json             │   │
+  ├─ host sign-out                      │   │
+  ├─ guest login                        │   │
+  ├─ guest accepts ──────── UI prices   │   │
+  ├─ updates price-log.json (ACCEPTANCE)│   │
+  ├─ Supabase verification             │   │
+  └─ DONE                              │   │
+                                        │   │
+  Agent 2 (API Poller)                  │   │
+  ├─ polls for latest.txt ◀─────────────┼───┘
+  ├─ reads listing-signal.json          │
+  ├─ fetches listing ──── API prices    │
+  ├─ polls for proposal (10s loop) ◀────┼── detects new Proposal
+  ├─ detects counter-offer diff         │
+  ├─ detects acceptance diff            │
+  ├─ reads price-log.json ◀────────────┘   checks for ACCEPTANCE phase
+  ├─ final snapshot
+  ├─ writes backend-price-summary.txt
+  └─ DONE
+    </pre>
+  </div>
+
+  <div class="callout callout--warning">
+    <div class="callout__title">Termination strategy</div>
+    <p>Agent 2 has two exit conditions: (1) it detects <code>Is Finalized</code> or an "accept" status change in the Bubble API, or (2) it reads Agent 1's <code>price-log.json</code> and finds an entry with <code>phase: "ACCEPTANCE"</code>. The second path is a fallback&mdash;if Bubble's API doesn't immediately reflect the acceptance, Agent 2 still knows to stop because Agent 1 confirmed it in the UI. After either trigger, Agent 2 does one final 5-second delay + fetch to capture the settled state.</p>
+  </div>
+</div>
+
+<hr>
+
+<!-- SITE PROFILES -->
+<div class="section">
+  <div class="section__number">Configuration</div>
+  <h2>Site Profiles &amp; Test Data</h2>
+  <p class="section__subtitle">Both agents share the same site profile system for targeting staging vs. production.</p>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Site Profiles</h3>
+      <span class="proposal__impact impact--shared">Both Agents</span>
+      <span class="proposal__effort">2 Profiles</span>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Profile</th><th>Base URL</th><th>Host Account</th><th>Guest Account</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>app.split.lease</code></td>
+          <td>https://app.split.lease</td>
+          <td>rodtesthost2@test.com</td>
+          <td>splitleasetesting@test.com</td>
+        </tr>
+        <tr>
+          <td><code>split.lease</code></td>
+          <td>https://split.lease</td>
+          <td>rodtesthost@test.com</td>
+          <td>splitleasetesting@test.com</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="proposal__tags">
+      <span class="tag">SITE_PROFILES</span>
+      <span class="tag">--site flag</span>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Default Listing Configuration</h3>
+      <span class="proposal__impact impact--agent1">Agent 1</span>
+      <span class="proposal__effort">CONFIG Object</span>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Field</th><th>Value</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Title</td><td><code>PW Test {MM-DD HH:MM:SS}</code> (auto-generated)</td></tr>
+        <tr><td>Type of Space</td><td>Private Room</td></tr>
+        <tr><td>Bedrooms</td><td>Studio</td></tr>
+        <tr><td>Kitchen</td><td>Full Kitchen</td></tr>
+        <tr><td>Parking</td><td>Street Parking</td></tr>
+        <tr><td>Bathrooms</td><td>2</td></tr>
+        <tr><td>Address</td><td>234 W 42nd St, New York</td></tr>
+        <tr><td>Lease Style</td><td>Nights-of-the-week</td></tr>
+        <tr><td>Initial Duration</td><td>6 weeks (URL) &rarr; 16 weeks (combobox)</td></tr>
+        <tr><td>Counter Duration</td><td>10 weeks</td></tr>
+        <tr><td>Days Selected</td><td>All 7 (Mon&ndash;Sun)</td></tr>
+      </tbody>
+    </table>
+    <div class="proposal__tags">
+      <span class="tag">CONFIG</span>
+      <span class="tag">BUBBLE_VALUES</span>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Browser Settings</h3>
+      <span class="proposal__impact impact--agent1">Agent 1</span>
+      <span class="proposal__effort">Playwright Config</span>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Setting</th><th>Value</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Headless</td><td><code>false</code> (visible browser)</td></tr>
+        <tr><td>Slow Motion</td><td>300ms between actions</td></tr>
+        <tr><td>Viewport</td><td>1280 &times; 720</td></tr>
+        <tr><td>Video Recording</td><td>Enabled (1280 &times; 720 WebM)</td></tr>
+        <tr><td>Navigation Timeout</td><td>60 seconds</td></tr>
+        <tr><td>Action Timeout</td><td>30 seconds</td></tr>
+        <tr><td>Clipboard Permissions</td><td>Granted (for URL extraction)</td></tr>
+      </tbody>
+    </table>
+    <div class="proposal__tags">
+      <span class="tag">slowMo: 300</span>
+      <span class="tag">recordVideo</span>
+      <span class="tag">clipboard-read/write</span>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- KEY FUNCTIONS -->
+<div class="section">
+  <div class="section__number">Key Functions</div>
+  <h2>Core Helper Functions</h2>
+  <p class="section__subtitle">Shared utilities that handle authentication, UI navigation, price scraping, and image generation.</p>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3><code>loginAs(page, email, password, label)</code></h3>
+      <span class="proposal__impact impact--agent1">Agent 1</span>
+    </div>
+    <p>Authenticates a user via the Bubble auth modal. Clicks "Sign In | Sign Up" &rarr; "Log into my account" &rarr; fills email and password &rarr; clicks "Login" &rarr; waits 15 seconds for Bubble's auth workflow to complete. Used four times: host login (Phase 1), guest login (Phase 2), host re-login (Phase 3), guest re-login (Phase 4).</p>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3><code>signOut(page, label)</code></h3>
+      <span class="proposal__impact impact--agent1">Agent 1</span>
+    </div>
+    <p>Robust sign-out with three fallback strategies. First dismisses any blocking modals ("Ignore", "Close", "Cancel", "No Thanks") and greyout overlays. Then tries: (1) avatar dropdown &rarr; "Sign Out", (2) navigate to homepage first then retry, (3) find any "Sign Out" text on page. Waits 10 seconds for completion.</p>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3><code>extractListingURL(page, label)</code></h3>
+      <span class="proposal__impact impact--agent1">Agent 1</span>
+    </div>
+    <p>Extracts the listing view URL using three strategies: (1) intercept <code>navigator.clipboard.writeText</code> and click "Copy Listing Link", (2) search for <code>a[href*="view-split-lease"]</code> in the DOM, (3) extract a Bubble unique ID (pattern: <code>\d{10,}x\d{10,}</code>) from the current URL and construct the view URL.</p>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3><code>scrapePrices(page, selectors)</code></h3>
+      <span class="proposal__impact impact--agent1">Agent 1</span>
+    </div>
+    <p>Takes a map of <code>{ name: async (page) => string }</code> functions, runs each against the page, and returns a price object. Each scraper function uses Playwright text locators with regex (e.g., <code>text=/\$[\d,.]+\s*\/\s*night/i</code>) to find dollar amounts. Non-fatal&mdash;null if any individual scraper fails.</p>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3><code>generateTestImages(count)</code></h3>
+      <span class="proposal__impact impact--agent1">Agent 1</span>
+    </div>
+    <p>Creates valid PNG files from scratch without any image library. Builds raw PNG binary data (signature, IHDR, IDAT with zlib-compressed pixel data, IEND) with a custom CRC-32 implementation. Generates 10&times;10 pixel solid-color images (red, green, blue). These are uploaded as listing photos to test the photo upload workflow.</p>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3><code>diffSnapshots(prev, curr)</code></h3>
+      <span class="proposal__impact impact--agent2">Agent 2</span>
+    </div>
+    <p>Compares two field-extracted snapshots. Returns <code>{ changed: bool, isNew: bool, fields: { key: { from, to } } }</code>. Skips timestamp fields. Uses <code>JSON.stringify</code> comparison to handle nested objects and arrays. The caller classifies the diff as a counter-offer, acceptance, or generic update based on which fields changed.</p>
+  </div>
+</div>
+
+<hr>
+
+<!-- OUTPUT FILES -->
+<div class="section">
+  <div class="section__number">Outputs</div>
+  <h2>Run Output Directory Structure</h2>
+  <p class="section__subtitle">Everything both agents produce lives under <code>recordings/{site}/{timestamp}/</code>.</p>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Directory Layout</h3>
+      <span class="proposal__impact impact--shared">Both Agents</span>
+    </div>
+<pre>recordings/
+  app-split-lease/
+    latest.txt                          ← pointer to current run timestamp
+    2026-02-19_14-30-00/
+      ├── screenshots/
+      │   ├── 01-homepage.png
+      │   ├── 02-host-logged-in.png
+      │   ├── 03-host-dashboard.png
+      │   ├── 04-wizard-loaded.png
+      │   ├── 05-address-filled.png
+      │   ├── 06-listing-submitted.png
+      │   ├── 07-manage-listing.png
+      │   ├── 08-host-signed-out.png
+      │   ├── 09-guest-logged-in.png
+      │   ├── 10-listing-page.png
+      │   ├── 11-proposal-created.png
+      │   ├── 12-proposal-submitted.png
+      │   ├── 13-guest-signed-out.png
+      │   ├── 14-host-logged-in-again.png
+      │   ├── 15-host-dashboard-proposals.png
+      │   ├── 16-proposal-page.png
+      │   ├── 17-proposal-review.png
+      │   ├── 18-terms-edited.png
+      │   ├── 19-proposal-countered.png
+      │   ├── 20-host-signed-out-again.png
+      │   ├── 21-guest-logged-in-again.png
+      │   ├── 22-guest-proposals.png
+      │   └── 23-terms-accepted.png
+      ├── test-images/
+      │   ├── test-image-1.png          ← red 10x10
+      │   ├── test-image-2.png          ← green 10x10
+      │   └── test-image-3.png          ← blue 10x10
+      ├── listing-signal.json           ← Agent 1 → Agent 2 handoff
+      ├── price-log.json                ← Agent 1 UI-scraped prices
+      ├── verification-report.json      ← Agent 1 Supabase check
+      ├── backend-price-tracker-log.json← Agent 2 full event log
+      ├── backend-price-summary.txt     ← Agent 2 cross-phase table
+      ├── listing-raw-fields.json       ← Agent 2 raw Bubble listing
+      ├── proposal-raw-fields.json      ← Agent 2 raw Bubble proposal
+      ├── proposal-raw-fields-counter_offer.json
+      ├── proposal-raw-fields-accepted.json
+      └── *.webm                        ← Playwright video recording</pre>
+    <div class="proposal__tags">
+      <span class="tag">screenshots</span>
+      <span class="tag">JSON logs</span>
+      <span class="tag">video</span>
+      <span class="tag">raw API data</span>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- PRICE TRACKING -->
+<div class="section">
+  <div class="section__number">Price Tracking</div>
+  <h2>Three-Layer Price Verification</h2>
+  <p class="section__subtitle">Every price is captured from UI, API, and database for cross-validation.</p>
+
+  <div class="matrix">
+    <div class="matrix__quadrant q-now">
+      <h4>Agent 1 &mdash; UI Prices</h4>
+      <ul>
+        <li>Listing page: nightly rate, 4-week rent</li>
+        <li>Proposal modal: price/night, total reservation, first 4 weeks</li>
+        <li>Counter-offer: compensation/night, duration, total</li>
+        <li>Acceptance: nightly rate, duration, total</li>
+      </ul>
+    </div>
+    <div class="matrix__quadrant q-next">
+      <h4>Agent 2 &mdash; API Prices</h4>
+      <ul>
+        <li>Listing: 5 nightly rate tiers, fees, computed prices</li>
+        <li>Proposal: nightly price, host comp, 4-week rent, totals</li>
+        <li>Counter diff: which fields changed &amp; by how much</li>
+        <li>Final state: settled values after acceptance</li>
+      </ul>
+    </div>
+    <div class="matrix__quadrant q-later">
+      <h4>Supabase &mdash; Database</h4>
+      <ul>
+        <li>Listing name, space type, bedrooms</li>
+        <li>Kitchen, parking, bathrooms</li>
+        <li>Rental type, active status</li>
+        <li>Field-by-field MATCH/MISMATCH</li>
+      </ul>
+    </div>
+    <div class="matrix__quadrant q-maybe">
+      <h4>Cross-Phase Summary</h4>
+      <ul>
+        <li>Agent 2 generates a comparison table</li>
+        <li>All price fields across all phases</li>
+        <li>Saved as <code>backend-price-summary.txt</code></li>
+        <li>Visual diff of what changed and when</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ERROR HANDLING -->
+<div class="section">
+  <div class="section__number">Resilience</div>
+  <h2>Error Handling &amp; Recovery Patterns</h2>
+  <p class="section__subtitle">Both agents use multi-strategy approaches to handle Bubble's dynamic UI and API inconsistencies.</p>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Bubble UI Challenges (Agent 1)</h3>
+      <span class="proposal__impact impact--agent1">Agent 1</span>
+      <span class="proposal__effort">Workarounds</span>
+    </div>
+    <p>Bubble.io presents several automation challenges that the script addresses with specific patterns:</p>
+    <ul>
+      <li><strong>Greyout overlays:</strong> Bubble renders semi-transparent overlays (<code>.greyout</code>) that block clicks. The script proactively checks for and clicks these to dismiss them before every major interaction.</li>
+      <li><strong>Animated buttons:</strong> Bubble animates button transitions, causing Playwright's "element not stable" errors. Solved with <code>{ force: true }</code> clicks that bypass stability checks.</li>
+      <li><strong>Avatar outside viewport:</strong> After proposal submission, the page may be scrolled down. The script scrolls to top first, then falls back to <code>.evaluate((el) => el.click())</code> for JavaScript-level clicks that don't need the element in viewport.</li>
+      <li><strong>Modal dismissal:</strong> Unexpected modals (suggestions, confirmations, notifications) are tried and caught individually. Four dismiss texts are attempted in sequence: "Ignore", "Close", "Cancel", "No Thanks".</li>
+      <li><strong>Long waits:</strong> Bubble's server-side workflows can take 10&ndash;60 seconds. The script uses generous <code>waitForTimeout</code> calls (15&ndash;60s) after login, page navigation, and wizard section transitions.</li>
+    </ul>
+    <div class="proposal__tags">
+      <span class="tag">greyout</span>
+      <span class="tag">force click</span>
+      <span class="tag">JS click</span>
+      <span class="tag">modal dismiss</span>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>API Resilience (Agent 2)</h3>
+      <span class="proposal__impact impact--agent2">Agent 2</span>
+      <span class="proposal__effort">Fallbacks</span>
+    </div>
+    <p>Agent 2 handles API instability with layered fallbacks:</p>
+    <ul>
+      <li><strong>Direct ID vs. search:</strong> Tries <code>bubbleGetById</code> first; if that fails (404 or permission error), falls back to constraint-based search by name.</li>
+      <li><strong>Non-fatal polling:</strong> Each 10-second poll iteration wraps all API calls in try/catch. A failed poll logs the error and continues rather than crashing.</li>
+      <li><strong>Listing check is secondary:</strong> The listing re-check (for price changes during the proposal lifecycle) is wrapped in an additional try/catch so a listing API failure doesn't stop proposal tracking.</li>
+      <li><strong>Dual exit signals:</strong> Watches both the API response (<code>Is Finalized</code>) and Agent 1's filesystem output (<code>price-log.json</code>) for termination, ensuring it stops even if one signal path fails.</li>
+    </ul>
+    <div class="proposal__tags">
+      <span class="tag">try/catch</span>
+      <span class="tag">ID fallback</span>
+      <span class="tag">dual exit</span>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- HOW TO RUN -->
+<div class="section">
+  <div class="section__number">Usage</div>
+  <h2>Running the Test Suite</h2>
+  <p class="section__subtitle">Launch both agents in parallel for full coverage, or run Agent 1 alone for UI-only testing.</p>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Full Dual-Agent Run</h3>
+      <span class="proposal__impact impact--shared">Both Agents</span>
+      <span class="proposal__effort">~13 min</span>
+    </div>
+    <p>Open two terminals. Start Agent 2 first (it will wait for the signal file), then start Agent 1:</p>
+<pre># Terminal 1: Start the backend price tracker (waits for signal)
+node bubble-price-tracker.cjs --site=app.split.lease
+
+# Terminal 2: Start the browser automation
+node proposal-journey-bubble.cjs --site=app.split.lease</pre>
+    <div class="proposal__why">
+      <strong>Order doesn't matter:</strong> Agent 2 polls for the signal file for up to 10 minutes. You can start them in either order or simultaneously. Agent 2 will patiently wait until Agent 1 creates the listing and writes the signal.
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Resume Mid-Flow</h3>
+      <span class="proposal__impact impact--agent1">Agent 1 Only</span>
+      <span class="proposal__effort">Skip-to Mode</span>
+    </div>
+    <p>Skip Phase 1 and start from the guest proposal using an existing listing:</p>
+<pre># Skip to Phase 2 using an existing listing
+node proposal-journey-bubble.cjs \
+  --skip-to=phase2 \
+  --listing-url=https://app.split.lease/view-split-lease/173829584...</pre>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Prerequisites</h3>
+      <span class="proposal__impact impact--shared">Both Agents</span>
+      <span class="proposal__effort">Setup</span>
+    </div>
+    <ul>
+      <li><strong>Node.js</strong> &mdash; v18+ (uses native <code>fetch</code>)</li>
+      <li><strong>Playwright</strong> &mdash; <code>npm install playwright</code> (Agent 1 only)</li>
+      <li><strong>Bubble API key</strong> &mdash; via <code>--api-key</code>, <code>BUBBLE_API_KEY</code> env, or hardcoded default (Agent 2 only)</li>
+      <li><strong>Test accounts</strong> &mdash; host and guest accounts must exist on the target site</li>
+      <li><strong>Supabase access</strong> &mdash; anon key is hardcoded for backend verification (Agent 1)</li>
+    </ul>
+    <div class="proposal__tags">
+      <span class="tag">node 18+</span>
+      <span class="tag">playwright</span>
+      <span class="tag">no other deps</span>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- SUMMARY -->
+<div class="section">
+  <div class="section__number">Summary</div>
+  <h2>Architecture at a Glance</h2>
+
+  <p><strong>Agent 1</strong> (<code>proposal-journey-bubble.cjs</code>, 1,180 lines) is a Playwright browser automation that drives the full four-phase proposal lifecycle&mdash;listing creation, proposal submission, host counter-offer, and guest acceptance&mdash;while capturing screenshots, video, UI-scraped prices, and Supabase verification data.</p>
+
+  <p><strong>Agent 2</strong> (<code>bubble-price-tracker.cjs</code>, 580 lines) is a headless Bubble Data API poller that runs in parallel, watching for backend data changes at each lifecycle stage. It produces structured diffs and a cross-phase price comparison table.</p>
+
+  <p>Together, they validate that what users see in the browser matches what the Bubble backend stores and what Supabase records&mdash;three independent views of every price, every status change, and every transition in the proposal lifecycle.</p>
+
+  <div class="callout callout--success">
+    <div class="callout__title">The key design principle</div>
+    <p>Price discrepancies between UI, API, and database are the hardest bugs to catch and the most costly to miss. By running a browser agent and an API agent in parallel against the same transaction, and then cross-referencing with a database query, this test suite catches pricing bugs that any single-surface test would miss entirely.</p>
+  </div>
+</div>
+
+<hr>
+
+<!-- HOW IT WAS BUILT -->
+<div class="section">
+  <div class="section__number">How It Was Built</div>
+  <h2>From Manual Recording to Autonomous Agents</h2>
+  <p class="section__subtitle">The development process combined Playwright's codegen recorder for UI selectors with Claude Code for API integration and agent orchestration.</p>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Step 1: Record the Journey with Playwright Codegen</h3>
+      <span class="proposal__impact impact--agent1">Foundation</span>
+      <span class="proposal__effort">Manual Recording</span>
+    </div>
+    <p>The entire process started by manually walking through the proposal journey on app.split.lease while <strong>Playwright's codegen recorder</strong> watched. Running <code>npx playwright codegen app.split.lease</code> opened a browser with an inspector panel that captured every click, every form fill, and every navigation as generated test code in real time.</p>
+    <p>The recording session (February 9, 2026) walked through the full flow: host login &rarr; listing wizard &rarr; proposal creation &rarr; counter-offer &rarr; acceptance. Codegen produced the raw selectors&mdash;the exact <code>getByRole</code>, <code>getByText</code>, <code>locator</code>, and <code>selectOption</code> calls that target Bubble's dynamically generated DOM elements.</p>
+    <div class="proposal__why">
+      <strong>Why codegen first:</strong> Bubble.io generates non-semantic CSS class names (e.g., <code>.cmaRhaT</code>, <code>.cvaAaIi12</code>) and wraps form controls in nested containers that are nearly impossible to guess. Recording the selectors from a live session is the only reliable way to get them right. The codegen output became the ground truth for every UI interaction in Agent 1.
+    </div>
+    <div class="proposal__tags">
+      <span class="tag">npx playwright codegen</span>
+      <span class="tag">2026-02-09 recording</span>
+      <span class="tag">selector capture</span>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Step 2: Translate the Recording into Replayable Code</h3>
+      <span class="proposal__impact impact--agent1">Agent 1</span>
+      <span class="proposal__effort">Script Assembly</span>
+    </div>
+    <p>The raw codegen output was a flat sequence of actions&mdash;no structure, no error handling, no multi-user flow. The next step was reshaping it into the phased, parameterized script that Agent 1 became:</p>
+    <ul>
+      <li><strong>Extracted selectors</strong> from the codegen recording and organized them by wizard section (address, features, lease style, pricing, rules, photos)</li>
+      <li><strong>Captured Bubble internal values</strong>&mdash;the option values like <code>"1348695171700984260__LOOKUP__1569530159044x216130979074711000"</code> that Bubble's comboboxes use internally. These came directly from the codegen's <code>selectOption()</code> calls</li>
+      <li><strong>Split the single recording into four phases</strong> with separate login/logout cycles for host and guest, since codegen records a single continuous session</li>
+      <li><strong>Added wait times</strong> calibrated from the recording&mdash;Bubble's workflows need 15&ndash;60 seconds depending on the operation, and these timings were tuned by observing the codegen playback</li>
+    </ul>
+    <div class="proposal__why">
+      <strong>The codegen gave us the "what":</strong> which elements to click, which values to select, which text to type. The script structure&mdash;phases, user switching, screenshot capture, URL extraction&mdash;was built around these recorded interactions as the skeleton.
+    </div>
+    <div class="proposal__tags">
+      <span class="tag">BUBBLE_VALUES</span>
+      <span class="tag">phase structure</span>
+      <span class="tag">selector mapping</span>
+    </div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>Step 3: Claude Code Built the API &amp; Intelligence Layers</h3>
+      <span class="proposal__impact impact--agent2">Agent 2</span>
+      <span class="proposal__effort">AI-Assisted</span>
+    </div>
+    <p>With Agent 1's browser flow working, <strong>Claude Code</strong> was used to design and build the entire backend verification and price tracking layer. Claude Code had access to the stored information from the project&mdash;the Bubble Data API structure, Supabase schema, field names from raw API responses, and the existing Agent 1 codebase&mdash;and used it to construct:</p>
+    <ul>
+      <li><strong>Agent 2 (bubble-price-tracker.cjs)</strong>&mdash;the complete parallel price tracker, including the Bubble Data API client, field extraction functions for all 17 listing and 22 proposal fields, the snapshot diffing engine, the signal file coordination protocol, and the cross-phase summary report generator</li>
+      <li><strong>Backend Observer</strong>&mdash;the Supabase verification system in Agent 1 that queries the database directly and generates field-by-field comparison reports</li>
+      <li><strong>Price scraping layer</strong>&mdash;the regex-based price capture functions that Agent 1 uses to extract dollar amounts from Bubble's rendered UI at each phase</li>
+      <li><strong>Inter-agent coordination</strong>&mdash;the file-based IPC protocol (signal files, shared output directory, dual termination strategy) that lets both agents run independently while sharing a single run folder</li>
+      <li><strong>Resilience patterns</strong>&mdash;the multi-strategy fallbacks for sign-out, URL extraction, API lookups, and modal dismissal that handle Bubble's unpredictable UI state</li>
+    </ul>
+    <div class="proposal__why">
+      <strong>Division of labor:</strong> The human provided the domain knowledge (how Split Lease works, what the proposal flow should look like) and the raw UI selectors (via codegen). Claude Code provided the systems engineering&mdash;API integration, data diffing, agent coordination, error handling, and the output structure that makes the test results actionable.
+    </div>
+    <div class="proposal__tags">
+      <span class="tag">Claude Code</span>
+      <span class="tag">Bubble Data API</span>
+      <span class="tag">Supabase integration</span>
+      <span class="tag">agent coordination</span>
+    </div>
+  </div>
+
+  <div class="diagram">
+    <pre>
+  DEVELOPMENT PIPELINE
+  ════════════════════════════════════════════════════════════════
+
+  ┌─────────────────────┐
+  │  1. PLAYWRIGHT       │   Human walks through app.split.lease
+  │     CODEGEN          │   while recorder captures every action
+  │                      │
+  │  npx playwright      │   Output: raw selectors, option values,
+  │  codegen             │   navigation paths, form interactions
+  └──────────┬──────────┘
+             │
+             │  Selectors + Bubble internal values
+             │
+  ┌──────────▼──────────┐
+  │  2. SCRIPT           │   Organize codegen output into phases
+  │     ASSEMBLY         │   Add user switching, parameterization,
+  │                      │   wait times, screenshot points
+  │  Human + codegen     │
+  │  output              │   Output: Agent 1 skeleton with all
+  └──────────┬──────────┘   UI interactions working
+             │
+             │  Working browser flow + stored API data
+             │
+  ┌──────────▼──────────┐
+  │  3. CLAUDE CODE      │   Reads project context:
+  │     BUILDS THE       │   - Bubble API field names from responses
+  │     REST             │   - Supabase schema from existing queries
+  │                      │   - Agent 1 code for coordination design
+  │  AI-assisted         │
+  │  engineering         │   Output: Agent 2, Backend Observer,
+  └─────────────────────┘   price scraping, IPC, error handling
+    </pre>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal__header">
+      <h3>See It in Action</h3>
+      <span class="proposal__impact impact--shared">Demo</span>
+      <span class="proposal__effort">Video Recording</span>
+    </div>
+    <p>Watch Playwright autonomously drive through the full proposal journey&mdash;logging in, filling the listing wizard, switching users, creating proposals, countering terms, and accepting&mdash;all from the codegen-sourced selectors running against live Bubble UI:</p>
+    <div style="position: relative; padding-bottom: 56.25%; height: 0; margin: 16px 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--border);">
+      <iframe src="https://www.loom.com/embed/8a4e037a06da49d7b47f2bc098cb3a50" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
+    </div>
+    <div class="proposal__why">
+      <strong>What you're seeing:</strong> Agent 1 replaying the recorded codegen path autonomously. Every click, form fill, and navigation was originally captured from a manual walkthrough, then assembled into the four-phase script. The browser runs headed (visible) with 300ms slow-motion so each action is observable.
+    </div>
+    <div class="proposal__tags">
+      <span class="tag">Loom recording</span>
+      <span class="tag">headed browser</span>
+      <span class="tag">slowMo: 300</span>
+    </div>
+  </div>
+
+  <div class="callout callout--insight">
+    <div class="callout__title">The pattern: Record &rarr; Replicate &rarr; Augment</div>
+    <p>This three-step approach&mdash;record the user journey with codegen, replicate it as structured automation code, then augment with AI-built API and verification layers&mdash;is repeatable for any Bubble.io application. The codegen recording handles the hardest part (Bubble's opaque selectors), the human shapes the flow, and Claude Code builds the intelligence layer that turns a simple replay into a multi-surface verification system.</p>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>
